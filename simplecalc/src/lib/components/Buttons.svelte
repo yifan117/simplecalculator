@@ -1,46 +1,129 @@
 <script lang="ts">
 
-// // export let console: string;
+import Dynamictext from './Dynamictext.svelte';
+import { fly } from 'svelte/transition'
 
-// // function setValue(value: string) {
+export let console: string = "";
+export let operation: string = "";
 
-// // console += value;
-// }
+let runningCalc: string = "";
+let total: number = 0;
+let done: boolean = false;
+let temp: number;
+let vtotal: number[] = [];
+let i = 0;
+
+function setValue(value: string) {
+
+    console += value;
+};
+
+function clear() {
+
+    console = "";
+    total = 0;
+    runningCalc = "";
+    vtotal = [];
+};
+
+function setOperation(op: string) {
+
+    operation = op;
+    done = true;
+
+    if ((done == true) && (operation != "=") && (operation == "+")) {
+        runningCalc += console + " " + operation + " ";
+        vtotal.push(parseInt(console));
+        console = "";
+    } else if(operation == "=") {
+        runningCalc += console + " " + op;
+        vtotal.push(parseInt(console));
+        console = "";
+        for (let i = 0; i < vtotal.length; i++) {
+            total += vtotal[i];
+        }
+        console = total.toString();
+    }
+}
+
 </script>
+
+<div class="textfield">
+    <div class="runningcalc">
+        {runningCalc}
+    </div>
+    <div class="total">
+        {console}
+    </div>
+</div>
 
 <div class="calcbody">
     <div class="row">
-        <div class="operationTop">C</div>
+        <div class="operationTop" on:click={() => clear()}>C</div>
         <div class="operationTop">+/-</div>
-        <div class="operationTop">%</div>
-        <div class="operationSign">÷</div>
+        <div class="operationTop" on:click={() => setOperation("%")}>%</div>
+        <div class="operationSign" on:click={() => setOperation("/")}>÷</div>
     </div>
+
     <div class="row">
-        <div class="digits">7</div>
-        <div class="digits">8</div>
-        <div class="digits">9</div>
-        <div class="operationSign">×</div>
+        <div class="digits" on:click={() => setValue("7")}>7</div>
+        <div class="digits" on:click={() => setValue("8")}>8</div>
+        <div class="digits" on:click={() => setValue("9")}>9</div>
+        <div class="operationSign" on:click={() => setOperation("*")}>×</div>
     </div>
+
     <div class="row">
-        <div class="digits">4</div>
-        <div class="digits">5</div>
-        <div class="digits">6</div>
-        <div class="operationSign">-</div>
+        <div class="digits" on:click={() => setValue("4")}>4</div>
+        <div class="digits" on:click={() => setValue("5")}>5</div>
+        <div class="digits" on:click={() => setValue("6")}>6</div>
+        <div class="operationSign" on:click={() => setOperation("-")}>-</div>
     </div>
+
     <div class="row">
-        <div class="digits">1</div>
-        <div class="digits">2</div>
-        <div class="digits">3</div>
-        <div class="operationSign">+</div>
+        <div class="digits" on:click={() => setValue("1")}>1</div>
+        <div class="digits" on:click={() => setValue("2")}>2</div>
+        <div class="digits" on:click={() => setValue("3")}>3</div>
+        <div class="operationSign" on:click={() => setOperation("+")}>+</div>
     </div>
+
     <div class="row">
-        <div class="zero">0</div>
+        <div class="zero" on:click={() => setValue("0")}>0</div>
         <div class="digits">.</div>
-        <div class="operationSign">=</div>
+        <div class="operationSign" on:click={() => setOperation("=")}>=</div>
     </div>
 </div>
 
 <style>
+
+.textfield {
+    height: 70px;
+    width: 228px;
+    background-color: #000000;
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.runningcalc {
+
+    color: #ffffff;
+    align-items: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    opacity: 30%;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    height: 20px;
+}
+
+.total {
+    padding: 6px;
+    color: #ffffff;
+    display: flex;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 2.5em;
+    justify-content: flex-end;
+    align-items: center;
+}
 
 .row {
     gap: 8px;
@@ -49,7 +132,6 @@
 }
 
 .digits {
-
     width: 45px;
     height: 45px;
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -61,7 +143,6 @@
     flex-direction: column;
     border-radius: 40px;
     color: #ffffff;
-
 }
 
 .digits:hover {

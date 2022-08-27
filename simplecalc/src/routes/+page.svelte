@@ -4,10 +4,20 @@
 
 </script>
 
-<Textfield/>
+<div class="calccomplete">
+    <!-- <Textfield/> -->
 
-<Buttons/>
+    <Buttons/>
+</div>
 
 <style>
 
+.calccomplete {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
 </style>

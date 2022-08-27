@@ -1,12 +1,13 @@
 <script lang="ts">
 
+import Buttons from './Buttons.svelte';
 let value = "";
 
 </script>
 
 <div class="textfield">
     <div class="text">
-    000
+        0
     </div>
 </div>
 
