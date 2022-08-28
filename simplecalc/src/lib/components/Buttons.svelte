@@ -11,11 +11,13 @@ let total: number = 0;
 let done: boolean = false;
 let temp: number;
 let vtotal: number[] = [];
+let optotal: string[] = [];
 let i = 0;
 
 function setValue(value: string) {
 
     console += value;
+
 };
 
 function clear() {
@@ -24,6 +26,7 @@ function clear() {
     total = 0;
     runningCalc = "";
     vtotal = [];
+
 };
 
 function setOperation(op: string) {
@@ -35,13 +38,35 @@ function setOperation(op: string) {
         runningCalc += console + " " + operation + " ";
         vtotal.push(parseInt(console));
         console = "";
-    } else if(operation == "=") {
-        runningCalc += console + " " + op;
+        optotal.push(operation);
+
+    } else if ((done == true) && (operation != "=") && (operation == "*")) {
+        runningCalc += console + " × ";
         vtotal.push(parseInt(console));
         console = "";
+        optotal.push(operation);
+        
+    } else if ((done == true) && (operation != "=") && (operation == "/")) {
+        runningCalc += console + " ÷ ";
+        vtotal.push(parseInt(console));
+        console = "";
+        optotal.push(operation);
+        
+    } else if ((done == true) && (operation != "=") && (operation == "-")) {
+        runningCalc += console + " - ";
+        vtotal.push(parseInt(console));
+        console = "";
+        optotal.push(operation); // maybe instead of pushing string, push number to represent the operation
+        
+    } else if(operation == "=") {
+        runningCalc += console + " " + op + " ";
+        vtotal.push(parseInt(console));
+        console = "";
+
         for (let i = 0; i < vtotal.length; i++) {
             total += vtotal[i];
         }
+
         console = total.toString();
     }
 }
@@ -60,7 +85,7 @@ function setOperation(op: string) {
 <div class="calcbody">
     <div class="row">
         <div class="operationTop" on:click={() => clear()}>C</div>
-        <div class="operationTop">+/-</div>
+        <div class="operationTop" on:click={() => setOperation("pl")}>+/-</div> <!--Need to add this functionality-->
         <div class="operationTop" on:click={() => setOperation("%")}>%</div>
         <div class="operationSign" on:click={() => setOperation("/")}>÷</div>
     </div>
