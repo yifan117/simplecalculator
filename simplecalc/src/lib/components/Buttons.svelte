@@ -1,18 +1,12 @@
 <script lang="ts">
 
-import Dynamictext from './Dynamictext.svelte';
-import { fly } from 'svelte/transition'
-
 export let console: string = "";
 export let operation: string = "";
 
 let runningCalc: string = "";
 let total: number = 0;
-let done: boolean = false;
-let temp: number;
-let vtotal: number[] = [];
-let optotal: string[] = [];
-let i = 0;
+let calcs: string[] = [];
+let pos: number;
 
 function setValue(value: string) {
 
@@ -25,49 +19,78 @@ function clear() {
     console = "";
     total = 0;
     runningCalc = "";
-    vtotal = [];
+    calcs = [];
 
 };
 
 function setOperation(op: string) {
 
     operation = op;
-    done = true;
 
-    if ((done == true) && (operation != "=") && (operation == "+")) {
+    if (operation == "+") {
+
+        calcs.push(console);
+
         runningCalc += console + " " + operation + " ";
-        vtotal.push(parseInt(console));
-        console = "";
-        optotal.push(operation);
 
-    } else if ((done == true) && (operation != "=") && (operation == "*")) {
+        calcs.push("+");
+
+        console = "";
+
+    } else if (operation == "pl") {
+
+        console = "-" + console;
+
+    } else if (operation == "-") {
+
+        calcs.push(console);
+
+        runningCalc += console + " " + operation + " ";
+
+        calcs.push("-");
+
+        console = "";
+
+    } else if (operation == "*") {
+
+        calcs.push(console);
+
         runningCalc += console + " × ";
-        vtotal.push(parseInt(console));
-        console = "";
-        optotal.push(operation);
-        
-    } else if ((done == true) && (operation != "=") && (operation == "/")) {
-        runningCalc += console + " ÷ ";
-        vtotal.push(parseInt(console));
-        console = "";
-        optotal.push(operation);
-        
-    } else if ((done == true) && (operation != "=") && (operation == "-")) {
-        runningCalc += console + " - ";
-        vtotal.push(parseInt(console));
-        console = "";
-        optotal.push(operation); // maybe instead of pushing string, push number to represent the operation
-        
-    } else if(operation == "=") {
-        runningCalc += console + " " + op + " ";
-        vtotal.push(parseInt(console));
+
+        calcs.push("*");
+
         console = "";
 
-        for (let i = 0; i < vtotal.length; i++) {
-            total += vtotal[i];
-        }
+    } else if (operation == "/") {
+
+        calcs.push(console);
+
+        runningCalc += console + " ÷ ";
+
+        calcs.push("/");
+
+        console = "";
+
+    } else if (operation == "%") {
+
+        calcs.push(console);
+
+        runningCalc += console + " " + operation + " ";
+
+        calcs.push("%");
+
+        console = "";
+
+    } else if (operation == "=") {
+
+        calcs.push(console);
+
+        runningCalc += console + " " + operation + " ";
+
+        total = eval(calcs.join(""));
 
         console = total.toString();
+
     }
 }
 
@@ -113,7 +136,7 @@ function setOperation(op: string) {
 
     <div class="row">
         <div class="zero" on:click={() => setValue("0")}>0</div>
-        <div class="digits">.</div>
+        <div class="digits" on:click={() => setValue(".")}>.</div>
         <div class="operationSign" on:click={() => setOperation("=")}>=</div>
     </div>
 </div>
